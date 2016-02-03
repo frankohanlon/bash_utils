@@ -1,0 +1,11 @@
+#! /bin/bash 
+#  $1 = input data file
+#  $2 = output data file 
+#  $3 = number of lines to head
+#  $4 = number of lines to tail
+# example use:
+# bob@datapro:~/working_files/bin$ dataclip /home/bob/working_files/ss_met/outputs/ss_met_at_11-0_avg.csv /home/bob/working_files/ss_met/web/outputs/ss_met_at_11-0_avg.csv  4 2016
+
+head -n$3 $1 > $2
+tail -n$4 $1 >> $2
+

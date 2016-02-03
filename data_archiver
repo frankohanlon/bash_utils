@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# Data archiving utility sort of intentioned for splitting data files by 
+# year or year-month.  
+# $1 = site root level directory: e.g. 
+#    /home/bbusey/working_files/barrow/intense_A/ (string)
+# $2 = optional: the grep string or guidance e.g.
+#  2013-
+#  2013-01
+#  [BLANK] 
+if [ "$1" == "--help" ]; then
+    echo "Data archiving utility for datapro processed data or raw table data output"
+    echo "run like:"
+    echo "./data_archiver /home/bbusey/working_files/barrow/intense_A/ 2012-01"
+    echo "./data_archiver /home/bbusey/working_files/barrow/intense_A/ 2012"
+    echo "./data_archiver /home/bbusey/working_files/barrow/intense_A/"
+    echo "Parameter 1 = site root directory"
+    echo "Parameter 2 = optional grep string (hyphen will be appended)"
+    echo "If Parameter 2 isn't included then the grep string will be this year"
+    exit
+fi
+
+
+sitedirectory=$1
+###################################################################
+# Set Directory Names
+#
+# e.g.: sitedirectory="/home/bbusey/working_files/barrow/intense_A"
+# these directory bits here have been standardized.
+outdirectory="$sitedirectory/outputs/"
+archive_directory="$sitedirectory/archive/"
+
+##########################################################
+# Make the default directory if it doesn't exist yet:
+if [ ! -d $archive_directory ]; then
+    mkdir $archive_directory
+fi
+
+##################################################
+# Look at what we'll be grepping for the archive
+case "$2" in
+    "" )
+        ToGrep=`date +%Y`
+        archive_directory=$archive_directory$ToGrep
+        ToGrep=$ToGrep
+        ;;
+    *) # case else
+        ToGrep=$2
+        archive_directory=$archive_directory$ToGrep
+        ;;
+esac    
+#######################################
+# Make the extended directory if it doesn't exist yet:
+if [ ! -d $archive_directory ]; then
+    mkdir $archive_directory
+fi
+
+################################################################
+# loop through the csv files in the directory datapro outputs to:
+for fname in `ls $outdirectory*.csv`; do
+    #################################################################
+    # do some string manipulation to put together a file name for the archive data
+    outlength=${#outdirectory}
+    datafilelength=${#fname}
+    position=$(($outlength))
+    length=$(($datafilelength-$outlength-4))
+    # data file name minus '.csv':
+    datafilename=${fname:position:length}
+    data_infile="$fname"
+    data_archivefile=$archivedirectory/$datafilename"_"$ToGrep".csv"
+    ####################################################
+    # Finally, add the data to the archive file:
+    head -n4 $fname > $archive_directory/$data_archivefile
+    # Note the appending of a hyphen to reduce the chances of capturing extraneous data:
+    GrepString=$ToGrep"-"
+    grep $GrepString $fname >> $archive_directory/$data_archivefile
+done
+
