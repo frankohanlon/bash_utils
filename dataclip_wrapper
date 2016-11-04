@@ -12,6 +12,7 @@ sitedirectory=$1
 outdirectory="$sitedirectory/outputs/"
 webdirectory="$sitedirectory/web/"
 linedirectory="$sitedirectory/web/one/"
+
 if [ ! -d $linedirectory ]; then
     mkdir $linedirectory
 fi
@@ -19,22 +20,28 @@ fi
 # loop through the csv files in the directory datapro outputs to:
 for fname in `ls $outdirectory*.csv`; do
 
-  # do some string manipulation to put together an output file name for the 
-  # clipped data
-  outlength=${#outdirectory}
-  datafilelength=${#fname}
-  position=$(($outlength))
-  length=$(($datafilelength-$outlength-4))
-  # data file name minus '.csv':
-  datafilename=${fname:position:length}
-  dataclip_infile="$fname"
-  dataclip_outfile="$webdirectory$datafilename$2"
-  single_suffix="_1.csv"
-  oneline="$linedirectory$datafilename$single_suffix"
-  # use dataclip to get a data file ready for web use.
-  /usr/local/bin/dataclip $fname $dataclip_outfile $3 $4
-#  echo $oneline
-  tail -n1 $fname > $oneline
+    # do some string manipulation to put together an output file name for the 
+    # clipped data
+    outlength=${#outdirectory}
+    datafilelength=${#fname}
+    position=$(($outlength))
+    length=$(($datafilelength-$outlength-4))
+    
+    # data file name minus '.csv':
+    datafilename=${fname:position:length}
+    dataclip_infile="$fname"
+    
+    dataclip_outfile="$webdirectory$datafilename$2"
+    single_suffix="_1.csv"
+    oneline="$linedirectory$datafilename$single_suffix"
+  
+    # use dataclip to get a data file ready for web use.
+    #/usr/local/bin/dataclip $fname $dataclip_outfile $3 $4
+
+    # Output to web directory
+    head -n$3 $fname > $dataclip_outfile
+    tail -n$4 $fname >> $dataclip_outfile
+    tail -n1 $fname > $oneline
 done
 
 
