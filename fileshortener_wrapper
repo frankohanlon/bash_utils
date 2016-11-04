@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# short wrapper to the earlier utility 'dataclip' which intends to make it
+# easier to use that script  on a larger scale.
+# $1 = site root level directory: e.g. /home/bbusey/working_files/barrow/intense_A/outputs
+# $2 = The year to truncate to
+
+sitedirectory=$1
+# e.g.: sitedirectory="/home/bbusey/working_files/barrow/intense_A/outputs"
+# these directory bits here I have basically standardized to.
+
+
+# loop through the csv files in the directory datapro outputs to:
+for fname in `ls $sitedirectory*.csv`; do
+  filename=$sitedirectory/$fname
+  echo $filename
+  # use the shortener to reset the file.
+  /home/bbusey/lib/bash_utils/shortener $fname $2
+done
+
+
