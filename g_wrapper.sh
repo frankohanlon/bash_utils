@@ -37,10 +37,10 @@ done
 # Loop through the csv files in the directory:
 for f in $ROOTDIR/*.csv
 do
-  fname=$(python /home/bbusey/lib/python_utils/pathsplit.py $f)  
+  fname=$(python /var/site/lib/python_utils/pathsplit.py $f)  
   LEN=$(expr length $fname)
   SUB=$(expr $LEN - 4)
   ROOTNAME=${fname:0:$SUB}
-  /home/bbusey/lib/bash_utils/grepper.sh -d$ROOTDIR -n$ROOTNAME -s$START -e$END
+  /var/site/lib/bash_utils/grepper.sh -d$ROOTDIR -n$ROOTNAME -s$START -e$END
 done
 

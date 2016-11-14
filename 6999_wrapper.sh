@@ -32,6 +32,6 @@ do
   SUB=$(expr $LEN - 4)
   ROOTNAME=${f:0:$SUB}
   echo $f
-  python /home/bbusey/lib/python_utils/6999filler.py --infile=$f
+  python /var/site/lib/python_utils/6999filler.py --infile=$f
 done
 
